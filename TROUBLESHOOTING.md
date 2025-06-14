@@ -4,40 +4,36 @@
 
 ---
 
-## (0614) Spring Boot 실행 시 DataSource 설정 오류
+### Spring Boot 실행 시 DataSource 설정 오류
+문제: DB 설정 누락으로 실행 실패
+원인: application.properties에 DB 정보 없음
+해결: VM 옵션 제거 또는 임시 DB 설정 추가
 
-### ❗ 오류 메시지
-Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
-Reason: Failed to determine a suitable driver class
-
-### 📌 원인
-- DB 설정 정보가 `application.properties`에 누락됨.
-- `spring-boot-starter-data-jdbc` 의존성이 포함되어 있어 Spring이 자동으로 데이터베이스 연결 시도.
-
-### ✅ 해결 방법
-- **방법 1**: DB가 아직 필요 없다면 의존성 제거
-```gradle
-// build.gradle
-// 제거: spring-boot-starter-data-jdbc, mysql-connector-j
-
-현재 아직 application.properties에 db 정보를 적은것이 아니기 때문에 해당 방법으로는 해결 불가
-
-- **방법 2**: 임시 DB 설정 추가
-# src/main/resources/application.properties
+properties
 spring.datasource.url=jdbc:mysql://localhost:3306/test
 spring.datasource.username=root
 spring.datasource.password=1234
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-## 복합 클래스명 선택 오류
-문제: By.className("td.title > div.bookmark > a") 사용 시 InvalidSelectorException 발생
-원인: className()은 공백 없는 단일 클래스명만 지원함. td.title, div.bookmark, a 등 복합 선택자는 지원하지 않음
-해결: By.cssSelector("td.title > div.bookmark > a")로 변경
+### 복합 클래스명 선택 오류
+문제: By.className("a > b") 사용 시 예외 발생
+원인: className()은 단일 클래스만 허용
+해결: By.cssSelector("td.title > div.bookmark > a")
 
-## 콘솔 화면에서 한글이 제대로 인코딩 되지 않는 오류
-문제 : 프로그램 실행 후 콘솔 화면에서 한글이 제대로 인코딩 되지 않고 깨지는 오류 발생
-원인: 인텔리제이에서 단일 Java 파일 실행 시 VM 인코딩 옵션 적용 안 됨
+### 콘솔에서 한글 깨짐
+문제: 콘솔에 한글이 깨짐
+원인: VM 인코딩 옵션 누락
 해결:
-Run Configuration에서 실행 (우상단 ▶ 버튼 → Edit Configurations)
-VM options에 -Dfile.encoding=UTF-8 추가
-또는 Application 전체 기준으로 실행 (Run 'Application: MainClassName' 방식)
+
+Run Configurations → VM options에 -Dfile.encoding=UTF-8 추가
+또는 애플리케이션 전체 실행
+
+### 페이지 반복으로 무한 크롤링
+문제: 마지막 페이지에서 같은 문제가 반복됨
+원인: 존재하지 않는 페이지에서 리디렉션 발생 + URL 비교 실패
+해결:
+
+WebElement titlelink = rows.get(0).findElement(By.cssSelector("td.title a"));
+String currentFirstUrl = titlelink.getAttribute("href");
+if (!lastFirstUrl.isEmpty() && currentFirstUrl.equals(lastFirstUrl)) break;
+lastFirstUrl = currentFirstUrl;

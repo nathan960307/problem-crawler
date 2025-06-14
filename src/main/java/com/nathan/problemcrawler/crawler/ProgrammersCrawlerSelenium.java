@@ -25,15 +25,15 @@ public class ProgrammersCrawlerSelenium {
         // 크롬 드라이버 경로 설정 (상대 경로 기준)
         System.setProperty("webdriver.chrome.driver", "src/main/resources/driver/chromedriver-win64/chromedriver.exe");
 
-        // 크롬 브라우저 실행
-        WebDriver driver = new ChromeDriver();
 
+        WebDriver driver = new ChromeDriver();// 크롬 브라우저 실행
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
         try {
             // 크롤링할 사이트 지정
             String site = "https://school.programmers.co.kr/learn/challenges?order=recent&page=";
             int page = 1;
+            String lastFirstUrl = "";
 
             // 페이지 접속
             while (true) {
@@ -55,6 +55,17 @@ public class ProgrammersCrawlerSelenium {
                     System.out.println("더 이상 문제가 없음.");
                     break;
                 }
+
+                WebElement titlelink = rows.get(0).findElement(By.cssSelector("td.title a"));
+                String currentFirstUrl = titlelink.getAttribute("href");
+
+                // 이전 페이지와 같으면 반복으로 판단 → 종료
+                if (!lastFirstUrl.isEmpty() && currentFirstUrl.equals(lastFirstUrl)) {
+                    System.out.println("같은 페이지 반복 감지. 종료.");
+                    break;
+                }
+                lastFirstUrl = currentFirstUrl;
+
 
                 for (WebElement row : rows) {
 
