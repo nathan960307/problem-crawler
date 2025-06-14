@@ -1,49 +1,50 @@
-﻿# problem-crawler
+# problem-crawler
 
-# 문제 크롤러 (Problem Crawler)
-
-## ✅ 프로젝트 목적
-- 프로그래머스 등 사이트에서 문제 정보를 크롤링하여 자체 DB에 저장
-- 이후 TODO RPG 프로젝트에서 추천 문제로 활용 가능
+## 📌 개요
+- 프로그래머스 등 알고리즘 사이트에서 문제 목록을 크롤링하여 DB에 저장
+- TODO-RPG 서비스에서 사용자 맞춤 문제 추천 기능에 활용 예정
 
 ---
 
-## 🛠 개발 스택
+## 🛠 기술 스택
 - Java 21
 - Spring Boot 3.5.0
 - Gradle
-- Selenium (크롤링용)
+- Selenium (동적 크롤링)
 - MySQL (저장소)
-- Jsoup (HTML 파싱 보조)
+- Jsoup (보조 HTML 파서)
 
 ---
 
-## ✅ 개발 단계
+## ✅ 진행 현황
 
-### 1. 프로젝트 생성 및 GitHub 연동
-- [x] IntelliJ로 Gradle 기반 Spring Boot 프로젝트 생성
-- [x] 깃허브 저장소 `problem-crawler` 생성 및 연동 완료
+### 1. 프로젝트 초기 설정
+- [x] Gradle 기반 Spring Boot 프로젝트 생성
+- [x] GitHub 저장소 [`problem-crawler`](https://github.com/nathan960307/problem-crawler) 연동 완료
 
-### 2. 크롤링 도구 설정
-- [ ] Selenium 의존성 추가
-- [ ] ChromeDriver 설치
-- [ ] 크롤링 테스트 코드 작성
+### 2. 크롤러 기능 구현
+- [x] Selenium 의존성 및 ChromeDriver 설정
+- [x] 프로그래머스 문제 크롤링 구현
+- [x] 문제 목록 페이지 전체 순회 및 데이터 추출
 
 ### 3. DB 연동
-- [ ] `Problem` 엔티티 생성
-- [ ] 크롤링한 문제 정보 DB 저장
+- [x] `Problem` 엔티티 및 Repository 구성
+- [x] 크롤링 데이터 DB 저장 로직 구현 (`@Component + ApplicationRunner` 기반 자동 실행)
 
 ---
 
-## 💡 트러블슈팅 기록
+## 🐛 트러블슈팅
 
 | 날짜 | 내용 |
 |------|------|
-| 2025-06-13 | 엔티티 이름 오타로 인해 DB 테이블 생성 안 됨 → `problem`으로 수정 후 rebuild하여 해결 |
-| 2025-06-13 | `.env` 적용 후에도 DB가 생성 안 됨 → rebuild 필요 |
+| 2025-06-13 | `.env` 반영 후 DB 연결 오류 → 프로젝트 rebuild로 해결 |
+| 2025-06-13 | `@Table(name = "problem")` 누락으로 테이블 생성 실패 → 명시 후 해결 |
+| 2025-06-14 | 크롤러가 한 페이지만 순회함 → Selenium의 DOM 렌더링 대기 문제 해결 (명시적 wait 추가 예정) |
 
 ---
 
-## 💬 TODO
-- [ ] 프로그래머스 외 백준, SWEA 등 지원 확장
-- [ ] 문제 난이도 분류 기준 통일화
+## 💬 향후 계획 (TODO)
+- [ ] 크롤링 대상 사이트 확대 (백준, SWEA 등)
+- [ ] 크롤링 데이터의 난이도/태그 정제 로직 추가
+- [ ] 중복 저장 방지 및 업데이트 로직 구현
+- [ ] 스케줄링 기반 자동 크롤링 기능 추가
