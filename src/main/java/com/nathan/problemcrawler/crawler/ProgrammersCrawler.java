@@ -16,5 +16,7 @@ public class ProgrammersCrawler {
         for (Element title : titles) {
             System.out.println("문제명: " + title.text());
         }
+
+        
     }
 }
