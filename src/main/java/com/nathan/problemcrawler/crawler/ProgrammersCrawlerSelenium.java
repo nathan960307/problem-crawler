@@ -15,26 +15,58 @@ public class ProgrammersCrawlerSelenium {
         // 크롬 브라우저 실행
         WebDriver driver = new ChromeDriver();
 
-        try {
-            // 페이지 접속
-            driver.get("https://school.programmers.co.kr/learn/challenges");
+        // 크롤링할 사이트 지정
+        String site = "https://school.programmers.co.kr/learn/challenges?order=recent&page=";
+        int page = 1;
 
-            // 페이지 로딩 대기 시간 (간단한 방식으로 Thread.sleep 사용)
-            Thread.sleep(3000); // 3초
+        // 페이지 접속
+        while (true) {
+            String link = site + page;
+            driver.get(link);
 
-            // 문제 제목들 가져오기
-            List<WebElement> titles = driver.findElements(By.cssSelector("td.title div.bookmark a"));
+            List<WebElement> rows = driver.findElements(By.cssSelector("table tbody tr"));
 
-            for (WebElement title : titles) {
-                System.out.println("문제명: " + title.getText());
-                System.out.println("링크: https://school.programmers.co.kr" + title.getAttribute("href"));
+            if (rows.isEmpty()) {
+                System.out.println("더 이상 문제가 없음.");
+                break;
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // 브라우저 닫기
-            driver.quit();
+
+            for (WebElement row : rows) {
+
+                WebElement titleEl = row.findElement(By.cssSelector("td.title a"));
+                WebElement levelEl = row.findElement(By.cssSelector("td.level span"));
+                WebElement partEl = row.findElement(By.cssSelector("small.part-title"));
+
+                // 각각 텍스트 추출
+                String title = titleEl.getText();
+                String url = "https://school.programmers.co.kr" + titleEl.getAttribute("href");
+                String level = levelEl.getText().replaceAll("[^0-9]", "");
+                String partTitle = partEl.getText();
+                String tier = "Lv." + level;
+
+
+                System.out.println(site);
+                System.out.println(title);
+                System.out.println(url);
+                System.out.println(level);
+//            System.out.println(partTitle);
+                System.out.println(tier);
+                System.out.println("=============================");
+            }
+            page++;
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
+
         }
+        // 브라우저 닫기
+        driver.quit();
     }
 }
