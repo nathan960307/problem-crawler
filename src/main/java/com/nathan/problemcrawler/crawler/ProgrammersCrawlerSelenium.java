@@ -75,7 +75,7 @@ public class ProgrammersCrawlerSelenium {
 
                     // 각각 텍스트 추출
                     String title = titleEl.getText();
-                    String url = "https://school.programmers.co.kr" + titleEl.getAttribute("href");
+                    String url = titleEl.getAttribute("href");
                     String level = levelEl.getText().replaceAll("[^0-9]", "");
 //                String partTitle = partEl.getText();
                     String tier = "Lv." + level;
