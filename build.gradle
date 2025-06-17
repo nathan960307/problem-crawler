@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.0'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'edu.sc.seis.launch4j' version '2.5.0'
 }
 
 group = 'com.nathan'
@@ -44,3 +45,11 @@ tasks.named('test') {
 }
 
 
+
+//launch4j {
+//    mainClassName = 'com.nathan.problemcrawler.CrawlerRunner'
+//    outputDir = "${buildDir}/launch4j"
+//    outfile = 'problem-crawler.exe'
+//    jar = "${buildDir}/libs/problem-crawler-0.0.1-SNAPSHOT.jar" // 🔥 정확히 이 이름
+//    icon = null
+//}
